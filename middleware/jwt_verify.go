@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"blog/config"
 	"context"
 	"fmt"
 	"net/http"
@@ -21,7 +22,7 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 				if _, ok := token.Method.(*jwt.SigningMethodEd25519); !ok {
 					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 				}
-				return JWT_SECRET, nil
+				return config.Cfg.JwtSecret, nil
 			})
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

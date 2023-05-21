@@ -4,7 +4,7 @@ import (
 	"blog/models"
 )
 
-func (db *BlogDBImpl) CreateUserIdDB(userData *models.UserData) (*models.UserDataResponse, error) {
+func (db *BlogDBImpl) CreateUserIdDB(userData *models.User) (*models.UserDataResponse, error) {
 	// userIdResp := models.NewUserDataResponse()
 	// tx := db.dbConn.MustBegin()
 	// _, err := tx.NamedQuery(`INSERT INTO userdatabase(user_id,name,email,phone_number)VALUES(:user_id,:name,:email,:phone_number)`, userData)

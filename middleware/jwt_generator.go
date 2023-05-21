@@ -1,27 +1,28 @@
 package middleware
 
 import (
+	"blog/config"
 	"time"
+
+	"blog/models"
 
 	"github.com/golang-jwt/jwt"
 )
 
 type claims struct {
 	Username string `json:"username"`
-	Dash     string `json:"dash"`
-	// Email    string `json:"email"`
-	UserID string `json:"user_id"`
-	Role   string `json:"role"`
+	Email    string `json:"email"`
+	UserId   string `json:"user_id"`
+	Role     string `json:"role"`
 	jwt.StandardClaims
 }
 
 func GenerateJWT(user models.User) (string, error) {
 	claims := &claims{
 		Username: user.Username,
-		Dash:     user.Dash,
-		// Email:    user.Email,
-		UserID: user.ID.Hex(),
-		Role:   user.Role,
+		Email:    user.Email,
+		UserId:   user.ID.Hex(),
+		Role:     user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 		},
@@ -29,7 +30,7 @@ func GenerateJWT(user models.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claims)
 
-	tokenString, err := token.SignedString(JWT_SECRET)
+	tokenString, err := token.SignedString(config.Cfg.JwtSecret)
 
 	if err != nil {
 		return "", err

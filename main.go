@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"blog/config"
-	"blog/server"
+	"blog/controller"
 
 	"github.com/fatih/color"
 	"github.com/gorilla/mux"
@@ -21,5 +21,5 @@ func init() {
 func main() {
 	router := mux.NewRouter()
 	color.Cyan("🌏 Server running on localhost:" + config.Cfg.ServerPort)
-	log.Fatal(http.ListenAndServe(":"+config.Cfg.ServerPort, server.NewServerImpl(router)))
+	log.Fatal(http.ListenAndServe(":"+config.Cfg.ServerPort, controller.NewControllerImpl(router)))
 }

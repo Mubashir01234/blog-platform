@@ -3,7 +3,6 @@ package db
 import (
 	"blog/config"
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/fatih/color"
@@ -20,7 +19,7 @@ type BlogDBImpl struct {
 }
 
 func ConnectDB() *BlogDBImpl {
-	fmt.Println(config.Cfg.MongoURL)
+
 	clientOptions := options.Client().ApplyURI(config.Cfg.MongoURL)
 	var err error
 
