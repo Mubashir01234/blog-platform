@@ -5,6 +5,8 @@ import (
 	"blog/models/errors"
 	"encoding/json"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/jinzhu/copier"
 )
@@ -22,5 +24,30 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 		errors.ServerErrResponse(err.Error(), rw)
 		return
 	}
+	_, err = c.db.GetUserDataByEmailDB(r, "users", user.Email)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+	}
 
+	passwordHash, err := hashPassword(user.Password)
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	user.Password = passwordHash
+	user.CreatedAt = time.Now().UTC()
+	user.UpdatedAt = time.Now().UTC()
+	result, err := c.db.RegisterDB(r, "users", user)
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+	res, err := json.Marshal(result.InsertedID)
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw)
 }

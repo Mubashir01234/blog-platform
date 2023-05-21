@@ -2,8 +2,10 @@ package db
 
 import (
 	"blog/config"
+	"blog/models"
 	"context"
 	"log"
+	"net/http"
 
 	"github.com/fatih/color"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,6 +13,8 @@ import (
 )
 
 type BlogDB interface {
+	GetUserDataByEmailDB(r *http.Request, collectionName, email string) (*models.User, error)
+	RegisterDB(r *http.Request, collectionName string, user models.User) (*mongo.InsertOneResult, error)
 }
 
 type BlogDBImpl struct {
@@ -47,9 +51,9 @@ func ConnectDB() *BlogDBImpl {
 
 func loadCollection(mongoConn *mongo.Client) map[string]*mongo.Collection {
 	collections := make(map[string]*mongo.Collection, 3)
-	collections["user"] = colHelper(mongoConn, "user")
-	collections["role"] = colHelper(mongoConn, "role")
-	collections["blog"] = colHelper(mongoConn, "blog")
+	collections["users"] = colHelper(mongoConn, "users")
+	collections["roles"] = colHelper(mongoConn, "roles")
+	collections["blogs"] = colHelper(mongoConn, "blogs")
 	return collections
 }
 
