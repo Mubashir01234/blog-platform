@@ -27,6 +27,13 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 	_, err = c.db.GetUserDataByEmailDB(r, "users", user.Email)
 	if err != nil {
 		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	_, err = c.db.GetUserDataByUsernameDB(r, "users", user.Username)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
 	}
 
 	passwordHash, err := hashPassword(user.Password)
@@ -43,7 +50,8 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 		errors.ServerErrResponse(err.Error(), rw)
 		return
 	}
-	res, err := json.Marshal(result.InsertedID)
+
+	res, _ := json.Marshal(result.InsertedID)
 	if err != nil {
 		errors.ServerErrResponse(err.Error(), rw)
 		return

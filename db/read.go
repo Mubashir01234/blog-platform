@@ -18,3 +18,13 @@ func (db *BlogDBImpl) GetUserDataByEmailDB(r *http.Request, collectionName, emai
 	}
 	return &existingUser, nil
 }
+
+func (db *BlogDBImpl) GetUserDataByUsernameDB(r *http.Request, collectionName, username string) (*models.User, error) {
+	var existingUser models.User
+
+	err := db.Collections[collectionName].FindOne(r.Context(), bson.D{primitive.E{Key: "username", Value: username}}).Decode(&existingUser)
+	if err == nil {
+		return nil, fmt.Errorf("username already exists")
+	}
+	return &existingUser, nil
+}
