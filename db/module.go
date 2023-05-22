@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/fatih/color"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -17,6 +18,8 @@ type BlogDB interface {
 	CheckUsernameExistsDB(r *http.Request, collectionName, username string) (*models.User, error)
 	RegisterDB(r *http.Request, collectionName string, user models.User) (*mongo.InsertOneResult, error)
 	GetUserByEmailDB(r *http.Request, collectionName, email string) (*models.User, error)
+	GetUserByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.User, error)
+	UpdateUserDB(r *http.Request, collectionName string, user models.User) error
 }
 
 type BlogDBImpl struct {

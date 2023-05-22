@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func IsAuthorized(next http.Handler) http.HandlerFunc {
+func IsAuthorized(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
 
@@ -19,10 +19,10 @@ func IsAuthorized(next http.Handler) http.HandlerFunc {
 		} else {
 			jwtToken := authHeader[1]
 			token, _ := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
-				if _, ok := token.Method.(*jwt.SigningMethodEd25519); !ok {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 				}
-				return config.Cfg.JwtSecret, nil
+				return []byte(config.Cfg.JwtSecret), nil
 			})
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

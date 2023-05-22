@@ -8,7 +8,6 @@ import (
 	"blog/routes"
 
 	"github.com/fatih/color"
-	"github.com/gorilla/mux"
 )
 
 func init() {
@@ -19,7 +18,6 @@ func init() {
 }
 
 func main() {
-	router := mux.NewRouter()
 	color.Cyan("🌏 Server running on localhost:" + config.Cfg.ServerPort)
-	log.Fatal(http.ListenAndServe(":"+config.Cfg.ServerPort, routes.NewRoutesImpl(router)))
+	log.Fatal(http.ListenAndServe(":"+config.Cfg.ServerPort, routes.NewRoutesImpl()))
 }

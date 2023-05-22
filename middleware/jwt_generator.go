@@ -21,7 +21,7 @@ func GenerateJWT(user models.User) (*string, error) {
 	claims := &claims{
 		Username: user.Username,
 		Email:    user.Email,
-		UserId:   user.ID.Hex(),
+		UserId:   user.Id.Hex(),
 		Role:     user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),

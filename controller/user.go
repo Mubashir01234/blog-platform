@@ -9,7 +9,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/jinzhu/copier"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
@@ -82,6 +84,63 @@ func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := middleware.GenerateJWT(*existingUser)
+	if err != nil {
+		errors.ErrorResponse("failed to generate token", rw)
+		return
+	}
+
+	models.SuccessResponse(*token, rw)
+}
+
+func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
+	props, _ := r.Context().Value("props").(jwt.MapClaims)
+
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	var body models.UpdateProfileRequest
+	err = json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	_, err = c.db.CheckUsernameExistsDB(r, "users", body.Username)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	user, err := c.db.GetUserByIdDB(r, "users", userId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	if len(body.Username) > 0 {
+		user.Username = body.Username
+	}
+	if len(body.FullName) > 0 {
+		user.FullName = body.FullName
+	}
+	if len(body.Role) > 0 {
+		user.Role = body.Role
+	}
+	if len(body.Bio) > 0 {
+		user.Bio = body.Bio
+	}
+	user.UpdatedAt = time.Now().UTC()
+
+	err = c.db.UpdateUserDB(r, "users", *user)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	token, err := middleware.GenerateJWT(*user)
 	if err != nil {
 		errors.ErrorResponse("failed to generate token", rw)
 		return
