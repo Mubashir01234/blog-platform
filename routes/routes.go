@@ -30,9 +30,14 @@ func NewRoutesImpl() *mux.Router {
 
 	profile := api.PathPrefix("/profile").Subrouter()
 	profile.Use(middleware.IsAuthorized)
-	profile.HandleFunc("/update", controller.UpdateProfile).Methods("PUT")
+	profile.HandleFunc("", controller.UpdateProfile).Methods("PUT")
 	profile.HandleFunc("", controller.GetProfile).Methods("Get")
 	profile.HandleFunc("", controller.DeleteProfile).Methods("Delete")
+
+	blog := api.PathPrefix("/blog").Subrouter()
+	blog.Use(middleware.IsAuthorized)
+	blog.HandleFunc("", controller.CreateBlog).Methods("POST")
+	blog.HandleFunc("/{blog_id}", controller.UpdateBlog).Methods("PUT")
 
 	return router
 }

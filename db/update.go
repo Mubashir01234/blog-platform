@@ -32,3 +32,24 @@ func (db *BlogDBImpl) UpdateUserDB(r *http.Request, collectionName string, user 
 	}
 	return nil
 }
+
+func (db *BlogDBImpl) UpdateBlogDB(r *http.Request, collectionName string, blog models.Blog) error {
+
+	res, err := db.Collections[collectionName].UpdateOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: blog.Id}}, bson.D{
+		primitive.E{
+			Key: "$set",
+			Value: bson.D{
+				primitive.E{Key: "title", Value: blog.Title},
+				primitive.E{Key: "description", Value: blog.Description},
+				primitive.E{Key: "updated_at", Value: blog.UpdatedAt},
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if res.MatchedCount == 0 {
+		return fmt.Errorf("blog doesn't exist")
+	}
+	return nil
+}

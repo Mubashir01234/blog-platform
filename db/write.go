@@ -14,3 +14,11 @@ func (db *BlogDBImpl) RegisterDB(r *http.Request, collectionName string, user mo
 	}
 	return result, nil
 }
+
+func (db *BlogDBImpl) CreateBlogDB(r *http.Request, collectionName string, blog models.Blog) (*mongo.InsertOneResult, error) {
+	result, err := db.Collections[collectionName].InsertOne(r.Context(), blog)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}

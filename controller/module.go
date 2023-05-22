@@ -11,6 +11,8 @@ type ControllerImpl interface {
 	UpdateProfile(rw http.ResponseWriter, r *http.Request)
 	GetProfile(rw http.ResponseWriter, r *http.Request)
 	DeleteProfile(rw http.ResponseWriter, r *http.Request)
+	CreateBlog(rw http.ResponseWriter, r *http.Request)
+	UpdateBlog(rw http.ResponseWriter, r *http.Request)
 }
 
 type Controller struct {

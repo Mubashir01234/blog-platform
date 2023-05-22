@@ -54,7 +54,7 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, _ := json.Marshal(result.InsertedID)
+	res, err := json.Marshal(result.InsertedID)
 	if err != nil {
 		errors.ServerErrResponse(err.Error(), rw)
 		return
@@ -120,18 +120,19 @@ func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(body.Username) > 0 {
+	if len(body.Username) != 0 {
 		user.Username = body.Username
 	}
-	if len(body.FullName) > 0 {
+	if len(body.FullName) != 0 {
 		user.FullName = body.FullName
 	}
-	if len(body.Role) > 0 {
+	if len(body.Role) != 0 {
 		user.Role = body.Role
 	}
-	if len(body.Bio) > 0 {
+	if len(body.Bio) != 0 {
 		user.Bio = body.Bio
 	}
+
 	user.UpdatedAt = time.Now().UTC()
 
 	err = c.db.UpdateUserDB(r, "users", *user)

@@ -18,3 +18,13 @@ type UpdateProfileRequest struct {
 	Role     string `json:"role" bson:"role,omitempty"`
 	Bio      string `json:"bio" bson:"bio,omitempty"`
 }
+
+type CreateBlogRequest struct {
+	Title       string `json:"title" bson:"title,omitempty"`
+	Description string `json:"description" bson:"description,omitempty"`
+}
+
+type UpdateBlogRequest struct {
+	Title       string `json:"title" bson:"title,omitempty"`
+	Description string `json:"description" bson:"description,omitempty"`
+}
