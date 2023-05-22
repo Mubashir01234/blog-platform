@@ -116,3 +116,33 @@ func (c *Controller) GetBlogById(rw http.ResponseWriter, r *http.Request) {
 	}
 	models.SuccessRespond(blogResp, rw)
 }
+
+func (c *Controller) DeleteBlog(rw http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	props, _ := r.Context().Value("props").(jwt.MapClaims)
+
+	blogId, err := primitive.ObjectIDFromHex(params["blog_id"])
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	blog, err := c.db.GetBlogByIdDB(r, "blogs", blogId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	if blog.UserId != props["user_id"].(string) {
+		errors.AuthorizationResponse("you have not access to delete this blog", rw)
+		return
+	}
+
+	err = c.db.DeleteBlogDB(r, "blogs", blogId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+	models.SuccessRespond("blog deleted successfully", rw)
+}

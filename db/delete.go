@@ -18,3 +18,14 @@ func (db *BlogDBImpl) DeleteProfileDB(r *http.Request, collectionName string, id
 	}
 	return nil
 }
+
+func (db *BlogDBImpl) DeleteBlogDB(r *http.Request, collectionName string, id primitive.ObjectID) error {
+	res, err := db.Collections[collectionName].DeleteOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: id}})
+	if err != nil {
+		return err
+	}
+	if res.DeletedCount == 0 {
+		return fmt.Errorf("blog doesn't exists")
+	}
+	return nil
+}

@@ -24,6 +24,7 @@ type BlogDB interface {
 	CreateBlogDB(r *http.Request, collectionName string, blog models.Blog) (*mongo.InsertOneResult, error)
 	GetBlogByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.Blog, error)
 	UpdateBlogDB(r *http.Request, collectionName string, blog models.Blog) error
+	DeleteBlogDB(r *http.Request, collectionName string, id primitive.ObjectID) error
 }
 
 type BlogDBImpl struct {

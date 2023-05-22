@@ -14,6 +14,7 @@ type ControllerImpl interface {
 	CreateBlog(rw http.ResponseWriter, r *http.Request)
 	UpdateBlog(rw http.ResponseWriter, r *http.Request)
 	GetBlogById(rw http.ResponseWriter, r *http.Request)
+	DeleteBlog(rw http.ResponseWriter, r *http.Request)
 }
 
 type Controller struct {
