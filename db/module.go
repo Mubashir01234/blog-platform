@@ -67,9 +67,8 @@ func ConnectDB() *BlogDBImpl {
 
 // loadCollection initializes the map of collection names to collection instances
 func loadCollection(mongoConn *mongo.Client) map[string]*mongo.Collection {
-	collections := make(map[string]*mongo.Collection, 3)
+	collections := make(map[string]*mongo.Collection, 2)
 	collections["users"] = colHelper(mongoConn, "users")
-	collections["roles"] = colHelper(mongoConn, "roles")
 	collections["blogs"] = colHelper(mongoConn, "blogs")
 	return collections
 }

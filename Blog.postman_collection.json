@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "937563c8-0263-43e9-8521-bb4076b9ecae",
+		"name": "Blog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17385921"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"abc01234\",\n    \"email\": \"abc@gmail.com\",\n    \"role\": \"Author\", // role: Author | Reader\n    \"password\": \"abc01234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/user/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"omerkhan012345@gmail.com\",\n    \"password\": \"mub012345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/user/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFiYzAxMjM0IiwiZW1haWwiOiJhYmNAZ21haWwuY29tIiwidXNlcl9pZCI6IjY0NmI4N2RhZjQ0MGE3YWM3ODI2NTliMCIsInJvbGUiOiJBdXRob3IiLCJleHAiOjE2ODQ4NTUxODl9.5ItHiPtb6S3VegCzypvwIN8ROBZfmp8dXU5CRRLNlAk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"hello01234\",\n    \"full_name\": \" mubashir\",\n    \"bio\": \"This is my bio\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/profile",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMDEyMzQiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNjQ2Yjg3ZGFmNDQwYTdhYzc4MjY1OWIwIiwicm9sZSI6IkF1dGhvciIsImV4cCI6MTY4NDg1NTI0MX0.HUAz067YmXLrg5NbZZ0NcFAlnvyr0xDW10f25gcAkKE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/profile",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMDEyMzQiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNjQ2Yjg3ZGFmNDQwYTdhYzc4MjY1OWIwIiwicm9sZSI6IkF1dGhvciIsImV4cCI6MTY4NDg1NTI0MX0.HUAz067YmXLrg5NbZZ0NcFAlnvyr0xDW10f25gcAkKE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/profile",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Create Blog",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMDEyMzQiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNjQ2Yjg3ZGFmNDQwYTdhYzc4MjY1OWIwIiwicm9sZSI6IkF1dGhvciIsImV4cCI6MTY4NDg1NTI0MX0.HUAz067YmXLrg5NbZZ0NcFAlnvyr0xDW10f25gcAkKE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"this is new title\",\n    \"description\": \"this is new description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/blog",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"blog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im11YjAxMjMiLCJlbWFpbCI6Im9tZXJraGFuMDEyMzRAZ21haWwuY29tIiwidXNlcl9pZCI6IjY0NmIwNmFmZGQzNjkyZTg0MGM0M2VjMiIsInJvbGUiOiJSZWFkZXIiLCJleHAiOjE2ODQ4NTUzODR9.r7sc8B1pa8t85EeP3dJyK_V2sLI2v_onivzoXyD3ck0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"this is update title\",\n    \"description\": \"this is updated description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/blog/646b8894f440a7ac782659b1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"646b8894f440a7ac782659b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blog By Blog id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mub012344\",\n    \"full_name\": \" mubashir\",\n    \"role\": \"Reader\",\n    \"bio\": \"My naeme muc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/blog/646b8894f440a7ac782659b1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"646b8894f440a7ac782659b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Blogs By Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mub012344\",\n    \"full_name\": \" mubashir\",\n    \"role\": \"Reader\",\n    \"bio\": \"My naeme muc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/mub012345/blogs",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"mub012345",
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMDEyMzQiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNjQ2Yjg3ZGFmNDQwYTdhYzc4MjY1OWIwIiwicm9sZSI6IkF1dGhvciIsImV4cCI6MTY4NDg1NTI0MX0.HUAz067YmXLrg5NbZZ0NcFAlnvyr0xDW10f25gcAkKE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/blog/646b8894f440a7ac782659b1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"646b8894f440a7ac782659b1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
