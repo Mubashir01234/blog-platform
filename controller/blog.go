@@ -65,7 +65,7 @@ func (c *Controller) UpdateBlog(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	blog, err := c.db.GetBlogDB(r, "blogs", blogId)
+	blog, err := c.db.GetBlogByIdDB(r, "blogs", blogId)
 	if err != nil {
 		errors.ErrorResponse(err.Error(), rw)
 		return
@@ -92,4 +92,27 @@ func (c *Controller) UpdateBlog(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	models.SuccessResponse("blog is updated", rw)
+}
+
+func (c *Controller) GetBlogById(rw http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	blogId, err := primitive.ObjectIDFromHex(params["blog_id"])
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	blog, err := c.db.GetBlogByIdDB(r, "blogs", blogId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	var blogResp models.GetBlogResp
+	if err := copier.Copy(&blogResp, &blog); err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+	models.SuccessRespond(blogResp, rw)
 }

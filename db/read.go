@@ -68,16 +68,3 @@ func (db *BlogDBImpl) GetBlogByIdDB(r *http.Request, collectionName string, id p
 	}
 	return &existedBlog, nil
 }
-
-func (db *BlogDBImpl) GetBlogDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.Blog, error) {
-	var existedBlog models.Blog
-
-	err := db.Collections[collectionName].FindOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&existedBlog)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return nil, fmt.Errorf("blog doesn't exists")
-		}
-		return nil, err
-	}
-	return &existedBlog, nil
-}

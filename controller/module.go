@@ -13,6 +13,7 @@ type ControllerImpl interface {
 	DeleteProfile(rw http.ResponseWriter, r *http.Request)
 	CreateBlog(rw http.ResponseWriter, r *http.Request)
 	UpdateBlog(rw http.ResponseWriter, r *http.Request)
+	GetBlogById(rw http.ResponseWriter, r *http.Request)
 }
 
 type Controller struct {
