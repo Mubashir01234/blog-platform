@@ -32,6 +32,7 @@ func NewRoutesImpl() *mux.Router {
 	profile.Use(middleware.IsAuthorized)
 	profile.HandleFunc("/update", controller.UpdateProfile).Methods("PUT")
 	profile.HandleFunc("", controller.GetProfile).Methods("Get")
+	profile.HandleFunc("", controller.DeleteProfile).Methods("Delete")
 
 	return router
 }

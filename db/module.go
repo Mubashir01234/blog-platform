@@ -20,6 +20,7 @@ type BlogDB interface {
 	GetUserByEmailDB(r *http.Request, collectionName, email string) (*models.User, error)
 	GetUserByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.User, error)
 	UpdateUserDB(r *http.Request, collectionName string, user models.User) error
+	DeleteProfileDB(r *http.Request, collectionName string, id primitive.ObjectID) error
 }
 
 type BlogDBImpl struct {

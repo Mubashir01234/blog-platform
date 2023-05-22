@@ -35,7 +35,7 @@ func (db *BlogDBImpl) GetUserByEmailDB(r *http.Request, collectionName, email st
 
 	err := db.Collections[collectionName].FindOne(r.Context(), bson.D{primitive.E{Key: "email", Value: email}}).Decode(&existingUser)
 	if err != nil {
-		if err == mongo.ErrNilDocument {
+		if err == mongo.ErrNoDocuments {
 			return nil, fmt.Errorf("email doesn't exists")
 		}
 		return nil, err
@@ -48,7 +48,7 @@ func (db *BlogDBImpl) GetUserByIdDB(r *http.Request, collectionName string, id p
 
 	err := db.Collections[collectionName].FindOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: id}}).Decode(&existingUser)
 	if err != nil {
-		if err == mongo.ErrNilDocument {
+		if err == mongo.ErrNoDocuments {
 			return nil, fmt.Errorf("user doesn't exists")
 		}
 		return nil, err

@@ -170,5 +170,22 @@ func (c *Controller) GetProfile(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	models.SuccessArrRespond(userResp, rw)
+	models.SuccessRespond(userResp, rw)
+}
+
+func (c *Controller) DeleteProfile(rw http.ResponseWriter, r *http.Request) {
+	props, _ := r.Context().Value("props").(jwt.MapClaims)
+
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	err = c.db.DeleteProfileDB(r, "users", userId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+	models.SuccessRespond("user deleted successfully", rw)
 }
