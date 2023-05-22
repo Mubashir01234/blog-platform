@@ -17,6 +17,11 @@ import (
 func (c *Controller) CreateBlog(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Extracting the properties from the request context, assuming it contains JWT claims
 
+	if props["role"].(string) != "Author" {
+		errors.AuthorizationResponse("you have not access to upload blog", rw) // Returning an authorization error response
+		return
+	}
+
 	var body models.CreateBlogRequest
 	err := json.NewDecoder(r.Body).Decode(&body) // Decoding the request body into the CreateBlogRequest struct
 	if err != nil {
