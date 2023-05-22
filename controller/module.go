@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"blog/db"
+	"blog/db" // Importing the db package
 	"net/http"
 )
 
@@ -19,14 +19,14 @@ type ControllerImpl interface {
 }
 
 type Controller struct {
-	db db.BlogDB
+	db db.BlogDB // Struct field to hold a database connection
 }
 
 func NewController() *Controller {
-	db := db.ConnectDB()
+	db := db.ConnectDB() // Establishing a new database connection
 	return &Controller{
 		db: db,
 	}
 }
 
-var _ ControllerImpl = &Controller{}
+var _ ControllerImpl = &Controller{} // Ensuring that the Controller struct implements the ControllerImpl interface

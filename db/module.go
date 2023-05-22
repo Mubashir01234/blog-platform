@@ -13,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// BlogDB defines the interface for interacting with the database
 type BlogDB interface {
 	CheckEmailExistsDB(r *http.Request, collectionName, email string) (*models.User, error)
 	CheckUsernameExistsDB(r *http.Request, collectionName, username string) (*models.User, error)
@@ -28,16 +29,19 @@ type BlogDB interface {
 	GetBlogsByUsernameDB(r *http.Request, collectionName, username string) ([]*models.GetBlogResp, error)
 }
 
+// BlogDBImpl is an implementation of the BlogDB interface
 type BlogDBImpl struct {
 	Client      *mongo.Client
 	Collections map[string]*mongo.Collection
 }
 
+// ConnectDB establishes a connection to the MongoDB database and returns a BlogDBImpl instance
 func ConnectDB() *BlogDBImpl {
-
+	// Configure MongoDB client options
 	clientOptions := options.Client().ApplyURI(config.Cfg.MongoURL)
 	var err error
 
+	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal("Connection Failed to Database")
@@ -52,6 +56,7 @@ func ConnectDB() *BlogDBImpl {
 	}
 	color.Green("⛁ Connected to Database")
 
+	// Load collections
 	collections := loadCollection(client)
 
 	return &BlogDBImpl{
@@ -60,6 +65,7 @@ func ConnectDB() *BlogDBImpl {
 	}
 }
 
+// loadCollection initializes the map of collection names to collection instances
 func loadCollection(mongoConn *mongo.Client) map[string]*mongo.Collection {
 	collections := make(map[string]*mongo.Collection, 3)
 	collections["users"] = colHelper(mongoConn, "users")
@@ -68,8 +74,10 @@ func loadCollection(mongoConn *mongo.Client) map[string]*mongo.Collection {
 	return collections
 }
 
+// colHelper helps in retrieving a specific collection from the MongoDB database using the provided collection name
 func colHelper(db *mongo.Client, collectionName string) *mongo.Collection {
 	return db.Database("blog").Collection(collectionName)
 }
 
+// Ensure BlogDBImpl implements the BlogDB interface
 var _ BlogDB = &BlogDBImpl{}

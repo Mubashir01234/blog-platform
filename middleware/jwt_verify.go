@@ -10,6 +10,10 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+// IsAuthorized is a middleware function that checks if the request is authorized.
+// It expects the JWT token to be included in the "Authorization" header as a Bearer token.
+// The function validates the token and attaches the token claims to the request context.
+// If the token is valid, the next handler is called; otherwise, an "Unauthorized" response is sent.
 func IsAuthorized(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
@@ -26,7 +30,7 @@ func IsAuthorized(next http.Handler) http.Handler {
 			})
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-				ctx := context.WithValue(r.Context(), "props", claims)
+				ctx := context.WithValue(r.Context(), "props", claims) // Attach token claims to the request context
 				next.ServeHTTP(w, r.WithContext(ctx))
 			} else {
 				AuthorizationResponse("Unauthorized", w)

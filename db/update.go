@@ -10,7 +10,6 @@ import (
 )
 
 func (db *BlogDBImpl) UpdateUserDB(r *http.Request, collectionName string, user models.User) error {
-
 	res, err := db.Collections[collectionName].UpdateOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: user.Id}}, bson.D{
 		primitive.E{
 			Key: "$set",
@@ -28,13 +27,13 @@ func (db *BlogDBImpl) UpdateUserDB(r *http.Request, collectionName string, user 
 		return err
 	}
 	if res.MatchedCount == 0 {
+		// No user found with the provided ID
 		return fmt.Errorf("user doesn't exist")
 	}
 	return nil
 }
 
 func (db *BlogDBImpl) UpdateBlogDB(r *http.Request, collectionName string, blog models.Blog) error {
-
 	res, err := db.Collections[collectionName].UpdateOne(r.Context(), bson.D{primitive.E{Key: "_id", Value: blog.Id}}, bson.D{
 		primitive.E{
 			Key: "$set",
@@ -49,6 +48,7 @@ func (db *BlogDBImpl) UpdateBlogDB(r *http.Request, collectionName string, blog 
 		return err
 	}
 	if res.MatchedCount == 0 {
+		// No blog found with the provided ID
 		return fmt.Errorf("blog doesn't exist")
 	}
 	return nil

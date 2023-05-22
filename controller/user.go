@@ -16,110 +16,112 @@ import (
 
 func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 	var body models.RegisterRequest
-	err := json.NewDecoder(r.Body).Decode(&body)
+	err := json.NewDecoder(r.Body).Decode(&body) // Decode the request body into a RegisterRequest struct
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error decoding the request body
 		return
 	}
 
-	var user models.User
-	if err := copier.Copy(&user, &body); err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
-		return
-	}
-	_, err = c.db.CheckEmailExistsDB(r, "users", user.Email)
-	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+	var user models.User                              // Create a new User struct
+	if err := copier.Copy(&user, &body); err != nil { // Copy the values from the RegisterRequest to the User struct
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error copying the values
 		return
 	}
 
-	_, err = c.db.CheckUsernameExistsDB(r, "users", user.Username)
+	_, err = c.db.CheckEmailExistsDB(r, "users", user.Email) // Check if the email already exists in the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if the email already exists
 		return
 	}
 
-	passwordHash, err := hashPassword(user.Password)
+	_, err = c.db.CheckUsernameExistsDB(r, "users", user.Username) // Check if the username already exists in the database
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if the username already exists
+		return
+	}
+
+	passwordHash, err := hashPassword(user.Password) // Hash the user's password
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error hashing the password
 		return
 	}
 
 	user.Password = passwordHash
 	user.CreatedAt = time.Now().UTC()
 	user.UpdatedAt = time.Now().UTC()
-	result, err := c.db.RegisterDB(r, "users", user)
+	result, err := c.db.RegisterDB(r, "users", user) // Register the user in the database
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error registering the user
 		return
 	}
 
-	res, err := json.Marshal(result.InsertedID)
+	res, err := json.Marshal(result.InsertedID) // Convert the inserted ID to JSON format
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error converting to JSON
 		return
 	}
 
-	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw)
+	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw) // Return a success response with the inserted ID
 }
 
 func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
 	var body models.LoginRequest
-	err := json.NewDecoder(r.Body).Decode(&body)
+	err := json.NewDecoder(r.Body).Decode(&body) // Decode the request body into a LoginRequest struct
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error decoding the request body
 		return
 	}
 
-	existingUser, err := c.db.GetUserByEmailDB(r, "users", body.Email)
+	existingUser, err := c.db.GetUserByEmailDB(r, "users", body.Email) // Retrieve the user by email from the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if there is an error retrieving the user
 		return
 	}
 
-	isPasswordMatch := checkPasswordHash(body.Password, existingUser.Password)
+	isPasswordMatch := checkPasswordHash(body.Password, existingUser.Password) // Check if the provided password matches the stored password
 	if !isPasswordMatch {
-		errors.ErrorResponse("password doesn't match", rw)
+		errors.ErrorResponse("password doesn't match", rw) // Return an error response if the passwords don't match
 		return
 	}
 
-	token, err := middleware.GenerateJWT(*existingUser)
+	token, err := middleware.GenerateJWT(*existingUser) // Generate a JWT token for the user
 	if err != nil {
-		errors.ErrorResponse("failed to generate token", rw)
+		errors.ErrorResponse("failed to generate token", rw) // Return an error response if there is an error generating the token
 		return
 	}
 
-	models.SuccessResponse(*token, rw)
+	models.SuccessResponse(*token, rw) // Return a success response with the generated token
 }
 
 func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
-	props, _ := r.Context().Value("props").(jwt.MapClaims)
+	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 
-	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string)) // Extract the user ID from the user properties
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error parsing the user ID
 		return
 	}
 
 	var body models.UpdateProfileRequest
-	err = json.NewDecoder(r.Body).Decode(&body)
+	err = json.NewDecoder(r.Body).Decode(&body) // Decode the request body into an UpdateProfileRequest struct
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error decoding the request body
 		return
 	}
 
-	_, err = c.db.CheckUsernameExistsDB(r, "users", body.Username)
+	_, err = c.db.CheckUsernameExistsDB(r, "users", body.Username) // Check if the username already exists in the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if the username already exists
 		return
 	}
 
-	user, err := c.db.GetUserByIdDB(r, "users", userId)
+	user, err := c.db.GetUserByIdDB(r, "users", userId) // Retrieve the user by ID from the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if there is an error retrieving the user
 		return
 	}
 
+	// Update the user properties if they are provided in the request body
 	if len(body.Username) != 0 {
 		user.Username = body.Username
 	}
@@ -133,60 +135,61 @@ func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
 		user.Bio = body.Bio
 	}
 
-	user.UpdatedAt = time.Now().UTC()
+	user.UpdatedAt = time.Now().UTC() // Update the "UpdatedAt" field with the current time
 
-	err = c.db.UpdateUserDB(r, "users", *user)
+	err = c.db.UpdateUserDB(r, "users", *user) // Update the user in the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if there is an error updating the user
 		return
 	}
 
-	token, err := middleware.GenerateJWT(*user)
+	token, err := middleware.GenerateJWT(*user) // Generate a JWT token for the updated user
 	if err != nil {
-		errors.ErrorResponse("failed to generate token", rw)
+		errors.ErrorResponse("failed to generate token", rw) // Return an error response if there is an error generating the token
 		return
 	}
 
-	models.SuccessResponse(*token, rw)
+	models.SuccessResponse(*token, rw) // Return a success response with the generated token
 }
 
 func (c *Controller) GetProfile(rw http.ResponseWriter, r *http.Request) {
-	props, _ := r.Context().Value("props").(jwt.MapClaims)
+	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 
-	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string)) // Extract the user ID from the user properties
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error parsing the user ID
 		return
 	}
 
-	user, err := c.db.GetUserByIdDB(r, "users", userId)
+	user, err := c.db.GetUserByIdDB(r, "users", userId) // Retrieve the user by ID from the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if there is an error retrieving the user
 		return
 	}
 
 	var userResp models.GetProfileResp
 	if err := copier.Copy(&userResp, &user); err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error copying the user data to the response struct
 		return
 	}
 
-	models.SuccessRespond(userResp, rw)
+	models.SuccessRespond(userResp, rw) // Return a success response with the user profile data
 }
 
 func (c *Controller) DeleteProfile(rw http.ResponseWriter, r *http.Request) {
-	props, _ := r.Context().Value("props").(jwt.MapClaims)
+	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 
-	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string)) // Extract the user ID from the user properties
 	if err != nil {
-		errors.ServerErrResponse(err.Error(), rw)
+		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error parsing the user ID
 		return
 	}
 
-	err = c.db.DeleteProfileDB(r, "users", userId)
+	err = c.db.DeleteProfileDB(r, "users", userId) // Delete the user profile from the database
 	if err != nil {
-		errors.ErrorResponse(err.Error(), rw)
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if there is an error deleting the user profile
 		return
 	}
-	models.SuccessRespond("user deleted successfully", rw)
+
+	models.SuccessRespond("user deleted successfully", rw) // Return a success response indicating that the user profile has been deleted
 }
