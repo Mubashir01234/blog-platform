@@ -9,6 +9,7 @@ type ControllerImpl interface {
 	Register(rw http.ResponseWriter, r *http.Request)
 	Login(rw http.ResponseWriter, r *http.Request)
 	UpdateProfile(rw http.ResponseWriter, r *http.Request)
+	GetProfile(rw http.ResponseWriter, r *http.Request)
 }
 
 type Controller struct {

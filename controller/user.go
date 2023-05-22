@@ -148,3 +148,27 @@ func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
 
 	models.SuccessResponse(*token, rw)
 }
+
+func (c *Controller) GetProfile(rw http.ResponseWriter, r *http.Request) {
+	props, _ := r.Context().Value("props").(jwt.MapClaims)
+
+	userId, err := primitive.ObjectIDFromHex(props["user_id"].(string))
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	user, err := c.db.GetUserByIdDB(r, "users", userId)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	var userResp models.GetProfileResp
+	if err := copier.Copy(&userResp, &user); err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	models.SuccessArrRespond(userResp, rw)
+}
