@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"blog/middleware"
 	"blog/models"
 	"blog/models/errors"
 	"encoding/json"
@@ -24,13 +25,13 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 		errors.ServerErrResponse(err.Error(), rw)
 		return
 	}
-	_, err = c.db.GetUserDataByEmailDB(r, "users", user.Email)
+	_, err = c.db.CheckEmailExistsDB(r, "users", user.Email)
 	if err != nil {
 		errors.ErrorResponse(err.Error(), rw)
 		return
 	}
 
-	_, err = c.db.GetUserDataByUsernameDB(r, "users", user.Username)
+	_, err = c.db.CheckUsernameExistsDB(r, "users", user.Username)
 	if err != nil {
 		errors.ErrorResponse(err.Error(), rw)
 		return
@@ -58,4 +59,33 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw)
+}
+
+func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
+	var body models.LoginRequest
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		errors.ServerErrResponse(err.Error(), rw)
+		return
+	}
+
+	existingUser, err := c.db.GetUserByEmailDB(r, "users", body.Email)
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	isPasswordMatch := checkPasswordHash(body.Password, existingUser.Password)
+	if !isPasswordMatch {
+		errors.ErrorResponse("password doesn't match", rw)
+		return
+	}
+
+	token, err := middleware.GenerateJWT(*existingUser)
+	if err != nil {
+		errors.ErrorResponse("failed to generate token", rw)
+		return
+	}
+
+	models.SuccessResponse(*token, rw)
 }

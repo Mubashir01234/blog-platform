@@ -13,9 +13,10 @@ import (
 )
 
 type BlogDB interface {
-	GetUserDataByEmailDB(r *http.Request, collectionName, email string) (*models.User, error)
+	CheckEmailExistsDB(r *http.Request, collectionName, email string) (*models.User, error)
+	CheckUsernameExistsDB(r *http.Request, collectionName, username string) (*models.User, error)
 	RegisterDB(r *http.Request, collectionName string, user models.User) (*mongo.InsertOneResult, error)
-	GetUserDataByUsernameDB(r *http.Request, collectionName, username string) (*models.User, error)
+	GetUserByEmailDB(r *http.Request, collectionName, email string) (*models.User, error)
 }
 
 type BlogDBImpl struct {

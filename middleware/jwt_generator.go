@@ -17,7 +17,7 @@ type claims struct {
 	jwt.StandardClaims
 }
 
-func GenerateJWT(user models.User) (string, error) {
+func GenerateJWT(user models.User) (*string, error) {
 	claims := &claims{
 		Username: user.Username,
 		Email:    user.Email,
@@ -28,13 +28,13 @@ func GenerateJWT(user models.User) (string, error) {
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(config.Cfg.JwtSecret)
+	tokenString, err := token.SignedString([]byte(config.Cfg.JwtSecret))
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return tokenString, nil
+	return &tokenString, nil
 }

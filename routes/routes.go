@@ -24,6 +24,7 @@ func NewRoutesImpl(router *mux.Router) *mux.Router {
 
 	user := api.PathPrefix("/user").Subrouter()
 	user.HandleFunc("/register", controller.Register).Methods("POST")
+	user.HandleFunc("/login", controller.Login).Methods("POST")
 
 	return router
 }
