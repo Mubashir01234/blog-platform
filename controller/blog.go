@@ -146,3 +146,15 @@ func (c *Controller) DeleteBlog(rw http.ResponseWriter, r *http.Request) {
 	}
 	models.SuccessRespond("blog deleted successfully", rw)
 }
+
+func (c *Controller) GetUserAllBlogsByUsername(rw http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	blogs, err := c.db.GetBlogsByUsernameDB(r, "blogs", params["username"])
+	if err != nil {
+		errors.ErrorResponse(err.Error(), rw)
+		return
+	}
+
+	models.SuccessArrRespond(blogs, rw)
+}

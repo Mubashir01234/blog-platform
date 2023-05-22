@@ -41,6 +41,7 @@ func NewRoutesImpl() *mux.Router {
 	blog.HandleFunc("/{blog_id}", controller.DeleteBlog).Methods("DELETE")
 
 	api.HandleFunc("/blog/{blog_id}", controller.GetBlogById).Methods("GET")
+	api.HandleFunc("/{username}/blogs", controller.GetUserAllBlogsByUsername).Methods("GET")
 
 	return router
 }

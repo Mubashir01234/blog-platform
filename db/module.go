@@ -25,6 +25,7 @@ type BlogDB interface {
 	GetBlogByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.Blog, error)
 	UpdateBlogDB(r *http.Request, collectionName string, blog models.Blog) error
 	DeleteBlogDB(r *http.Request, collectionName string, id primitive.ObjectID) error
+	GetBlogsByUsernameDB(r *http.Request, collectionName, username string) ([]*models.GetBlogResp, error)
 }
 
 type BlogDBImpl struct {
