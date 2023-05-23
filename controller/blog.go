@@ -17,7 +17,7 @@ import (
 func (c *Controller) CreateBlog(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Extracting the properties from the request context, assuming it contains JWT claims
 
-	if props["role"].(string) != "Author" {
+	if props["role"].(string) != "Author" && props["role"].(string) != "Admin" {
 		errors.AuthorizationResponse("you have not access to upload blog", rw) // Returning an authorization error response
 		return
 	}
@@ -77,9 +77,11 @@ func (c *Controller) UpdateBlog(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if blog.UserId != props["user_id"].(string) { // Checking if the user is authorized to update the blog
-		errors.AuthorizationResponse("you have not access to update this blog", rw) // Returning an authorization error response
-		return
+	if props["role"].(string) != "Admin" {
+		if blog.UserId != props["user_id"].(string) { // Checking if the user is authorized to update the blog
+			errors.AuthorizationResponse("you have not access to update this blog", rw) // Returning an authorization error response
+			return
+		}
 	}
 
 	if len(body.Title) != 0 { // Updating the blog title if it is provided in the request body
@@ -140,9 +142,11 @@ func (c *Controller) DeleteBlog(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if blog.UserId != props["user_id"].(string) { // Checking if the user is authorized to delete the blog
-		errors.AuthorizationResponse("you have not access to delete this blog", rw) // Returning an authorization error response
-		return
+	if props["role"].(string) != "Admin" {
+		if blog.UserId != props["user_id"].(string) { // Checking if the user is authorized to delete the blog
+			errors.AuthorizationResponse("you have not access to delete this blog", rw) // Returning an authorization error response
+			return
+		}
 	}
 
 	err = c.db.DeleteBlogDB(r, "blogs", blogId) // Deleting the blog from the database

@@ -1,6 +1,10 @@
 package controller
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"fmt"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 // hashPassword generates a bcrypt hash of the given password.
 func hashPassword(password string) (string, error) {
@@ -12,4 +16,14 @@ func hashPassword(password string) (string, error) {
 func checkPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func roleValidator(role string) error {
+	supportedRoles := []string{"Admin", "Author", "Reader"}
+	for _, supportedRole := range supportedRoles {
+		if role == supportedRole {
+			return nil
+		}
+	}
+	return fmt.Errorf("unsupported role: %s", role) // Role is not supported, return error
 }

@@ -22,6 +22,11 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := roleValidator(body.Role); err != nil {
+		errors.ErrorResponse(err.Error(), rw) // Return an error response if the role is not exists
+		return
+	}
+
 	var user models.User                              // Create a new User struct
 	if err := copier.Copy(&user, &body); err != nil { // Copy the values from the RegisterRequest to the User struct
 		errors.ServerErrResponse(err.Error(), rw) // Return a server error response if there is an error copying the values
