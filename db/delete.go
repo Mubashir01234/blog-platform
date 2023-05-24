@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"           // Importing the BSON package from MongoDB driver
+	"go.mongodb.org/mongo-driver/bson/primitive" // Importing the primitive package from MongoDB driver
 )
 
 // DeleteProfileDB deletes a user profile from the specified collection by ID.

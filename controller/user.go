@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Register is used to register a new user of any role like Admin, Author and Reader.
 func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 	var body models.RegisterRequest
 	err := json.NewDecoder(r.Body).Decode(&body) // Decode the request body into a RegisterRequest struct
@@ -69,6 +70,7 @@ func (c *Controller) Register(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw) // Return a success response with the inserted ID
 }
 
+// This Login function is used to login the user with email and password and in response is gives JWT token.
 func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
 	var body models.LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&body) // Decode the request body into a LoginRequest struct
@@ -98,6 +100,7 @@ func (c *Controller) Login(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessResponse(*token, rw) // Return a success response with the generated token
 }
 
+// UpdateProfile will update the user profile and user have only access to update own profile
 func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 
@@ -157,6 +160,7 @@ func (c *Controller) UpdateProfile(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessResponse(*token, rw) // Return a success response with the generated token
 }
 
+// GetProfile will show your own profile information with the help of login token
 func (c *Controller) GetProfile(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 
@@ -181,6 +185,7 @@ func (c *Controller) GetProfile(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessRespond(userResp, rw) // Return a success response with the user profile data
 }
 
+// DeleteProfile will delete the own profile with the help of token
 func (c *Controller) DeleteProfile(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Get the user properties from the request context
 

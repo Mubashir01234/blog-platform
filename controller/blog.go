@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive" // Importing the primitive package for MongoDB operations
 )
 
+// CreateBlog will upload a new blog for Author and then Reader can review the blog
 func (c *Controller) CreateBlog(rw http.ResponseWriter, r *http.Request) {
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Extracting the properties from the request context, assuming it contains JWT claims
 
@@ -55,6 +56,7 @@ func (c *Controller) CreateBlog(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessResponse(`inserted at `+strings.Replace(string(res), `"`, ``, 2), rw) // Returning a success response with the inserted ID
 }
 
+// In UpdateBlog the Author can update own blog
 func (c *Controller) UpdateBlog(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)                                  // Getting the request parameters from the URL
 	props, _ := r.Context().Value("props").(jwt.MapClaims) // Extracting the properties from the request context, assuming it contains JWT claims
@@ -102,6 +104,7 @@ func (c *Controller) UpdateBlog(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessResponse("blog is updated", rw) // Returning a success response
 }
 
+// In GetBlogById user can view the Author blog with the help of blog id.
 func (c *Controller) GetBlogById(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r) // Getting the request parameters from the URL
 
@@ -125,6 +128,7 @@ func (c *Controller) GetBlogById(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessRespond(blogResp, rw) // Returning a success response with the GetBlogResp struct
 }
 
+// DeleteBlog is used to delete a blog Author only delete own blog but Admin have access to all the authors blog but Reader have no access to delete any blog.
 func (c *Controller) DeleteBlog(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r) // Getting the request parameters from the URL
 
@@ -157,6 +161,7 @@ func (c *Controller) DeleteBlog(rw http.ResponseWriter, r *http.Request) {
 	models.SuccessRespond("blog deleted successfully", rw) // Returning a success response
 }
 
+// In GetUserAllBlogsByUsername user can get all the blog of specific user with the help of username
 func (c *Controller) GetUserAllBlogsByUsername(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r) // Getting the request parameters from the URL
 

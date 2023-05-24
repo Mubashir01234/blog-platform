@@ -60,6 +60,8 @@ func (db *BlogDBImpl) GetUserByEmailDB(r *http.Request, collectionName, email st
 	return &existingUser, nil
 }
 
+// GetUserByIdDB retrivers the user by their user id from the specified collection
+// Returns the user if found, otherwise returns an error
 func (db *BlogDBImpl) GetUserByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.User, error) {
 	var existingUser models.User
 
@@ -77,6 +79,8 @@ func (db *BlogDBImpl) GetUserByIdDB(r *http.Request, collectionName string, id p
 	return &existingUser, nil
 }
 
+// GetBlogByIdDB retrivers the blog by their blog id from the specified collection
+// Returns the blog if found, otherwise returns an error
 func (db *BlogDBImpl) GetBlogByIdDB(r *http.Request, collectionName string, id primitive.ObjectID) (*models.Blog, error) {
 	var existedBlog models.Blog
 
@@ -94,6 +98,7 @@ func (db *BlogDBImpl) GetBlogByIdDB(r *http.Request, collectionName string, id p
 	return &existedBlog, nil
 }
 
+// GetBlogsByUsernameDB retrivers all the blog of the user by username from the specified collection
 func (db *BlogDBImpl) GetBlogsByUsernameDB(r *http.Request, collectionName, username string) ([]*models.GetBlogResp, error) {
 	var blogs []*models.GetBlogResp
 

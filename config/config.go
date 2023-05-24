@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/viper" // Importing the viper package for configuration handling
 )
 
+// Config struct contains the configuration variable the define in the config file
 type Config struct {
 	MongoURL   string `mapstructure:"MONGO_URL"`   // Configuration field for MongoDB URL
 	ServerPort string `mapstructure:"SERVER_PORT"` // Configuration field for server port
@@ -12,6 +13,7 @@ type Config struct {
 
 var Cfg Config // Global variable to hold the configuration
 
+// LoadConfig will load the configuration
 func LoadConfig() error {
 	viper.AddConfigPath("./")   // Adding the configuration path
 	viper.SetConfigName(".env") // Setting the configuration file name

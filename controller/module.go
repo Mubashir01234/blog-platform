@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// This is interface of the controller that shows all the functions of the controller
 type ControllerImpl interface {
 	Register(rw http.ResponseWriter, r *http.Request)
 	Login(rw http.ResponseWriter, r *http.Request)

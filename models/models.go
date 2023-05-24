@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// User struct is used in user endpoints and they shows all the entities of the user.
 type User struct {
 	Id        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	Username  string             `json:"username" bson:"username,omitempty"`
@@ -20,6 +21,7 @@ type User struct {
 	DeletedAt time.Time          `json:"deleted_at" bson:"deleted_at,omitempty"`
 }
 
+// Blog struct is used in blogs endpoint and they also shows all the entities of the blog.
 type Blog struct {
 	Id          primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	UserId      string             `json:"user_id" bson:"user_id,omitempty"`

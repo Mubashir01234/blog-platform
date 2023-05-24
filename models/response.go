@@ -9,25 +9,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Response is used to show the response with status code, message and Data related to request.
 type Response struct {
 	Status  int         `json:"status"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
-}
-type UserDataResponse struct {
-	UserId      *int64  `json:"user_id" db:"user_id"`
-	Name        *string `json:"name" db:"name"`
-	Email       *string `json:"email" db:"email"`
-	PhoneNumber *string `json:"phone_number" db:"phone_number"`
-}
-
-func NewUserDataResponse() *UserDataResponse {
-	return &UserDataResponse{
-		UserId:      new(int64),
-		Name:        new(string),
-		Email:       new(string),
-		PhoneNumber: new(string),
-	}
 }
 
 // SuccessArrRespond -> response formatter
@@ -83,6 +69,7 @@ func SuccessResponse(msg string, writer http.ResponseWriter) {
 	json.NewEncoder(writer).Encode(temp)
 }
 
+// GetProfileResp is used to get the user profile
 type GetProfileResp struct {
 	Id        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	Username  string             `json:"username" bson:"username,omitempty"`
@@ -95,6 +82,7 @@ type GetProfileResp struct {
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at,omitempty"`
 }
 
+// GetBlogResp is used to get the blog information
 type GetBlogResp struct {
 	Id          primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	UserId      string             `json:"user_id" bson:"user_id,omitempty"`

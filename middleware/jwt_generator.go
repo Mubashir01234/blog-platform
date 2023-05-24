@@ -6,7 +6,7 @@ import (
 
 	"blog/models"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt" // Import golang jwt library
 )
 
 // Claims represents the custom claims for the JWT.

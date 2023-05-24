@@ -18,10 +18,11 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
+// roleValidator is used to validate the user role and only accept the specified role.
 func roleValidator(role string) error {
-	supportedRoles := []string{"Admin", "Author", "Reader"}
-	for _, supportedRole := range supportedRoles {
-		if role == supportedRole {
+	supportedRoles := []string{"Admin", "Author", "Reader"} // Roles that are supported
+	for _, supportedRole := range supportedRoles {          // Check and validate the role is supported or not
+		if role == supportedRole { // If the role is supported, return nil
 			return nil
 		}
 	}
